@@ -1,0 +1,416 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at center, #1b1b3a, #0a0a1a 70%);
+  color: white;
+ min-height: 100vh;
+overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================= APP LAYOUT ================= */
+.app {
+  width: 90%;
+  max-width: 1300px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  height: 100%;
+}
+
+/* ================= BRAND HEADER ================= */
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 48px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 6px;
+}
+
+.logo-o {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  line-height: 1.2em;
+  font-size: inherit;
+  color: #ffffff;
+}
+
+.logo-o::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #8f84ff, #6c63ff);
+  box-shadow: 0 0 18px rgba(108,99,255,0.6);
+  z-index: -1;
+
+  /* Slight nudge left + down */
+  transform: translate(-5%, 3%);
+}
+
+
+/* ================= LIBRARY ================= */
+.library {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+  position: relative;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.library::-webkit-scrollbar {
+  width: 0px;
+}
+
+.library::before,
+.library::after {
+  content: "";
+  position: sticky;
+  left: 0;
+  right: 0;
+  height: 40px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.library::before {
+  top: 0;
+  background: linear-gradient(to bottom, #0a0a1a, transparent);
+}
+
+.library::after {
+  bottom: 0;
+  background: linear-gradient(to top, #0a0a1a, transparent);
+}
+
+/* ================= SONG CARD ================= */
+.song {
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+.song:hover {
+  background: rgba(108, 99, 255, 0.15);
+  transform: translateX(6px);
+  border-color: rgba(108, 99, 255, 0.4);
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 12px rgba(108, 99, 255, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(108, 99, 255, 0.6);
+  }
+
+  100% {
+    box-shadow: 0 0 12px rgba(108, 99, 255, 0.3);
+  }
+}
+
+.song.active {
+  background: rgba(108, 99, 255, 0.22);
+  border: 1px solid rgba(108, 99, 255, 0.6);
+  transform: translateX(6px);
+  animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
+.song::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: var(--progress, 0%);
+  background: linear-gradient(to right, #8f84ff, #6c63ff);
+  transition: width 0.1s linear;
+}
+
+/* ================= DESKTOP PLAYER ================= */
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px;
+}
+
+.player img {
+  width: 260px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 25px 60px rgba(108, 99, 255, 0.25);
+}
+
+.player h2 {
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* BAR SPECTRUM */
+canvas {
+  width: 75%;
+  height: 80px;
+  /* 🔥 reduced from 120px */
+  margin: 20px auto;
+  /* center it */
+  opacity: 0.85;
+}
+
+/* Controls */
+.controls {
+  margin-top: 20px;
+}
+
+/* ================= CONTROL SECTION LAYOUT ================= */
+.control-section {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  /* space between volume & buttons */
+}
+
+/* Center volume nicely */
+.volume-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.controls button {
+  background: #6c63ff;
+  border: none;
+  padding: 14px 22px;
+  margin: 0 10px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.controls button:hover {
+  background: #5848e5;
+  transform: scale(1.1);
+}
+
+/* ================= MINI PLAYER (HIDDEN BY DEFAULT) ================= */
+.mini-player {
+  display: none;
+}
+
+/* ================= MOBILE ONLY ================= */
+@media(max-width: 900px) {
+  body {
+    display: block;
+  }
+
+  main {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hide desktop player */
+  .player {
+    display: none;
+  }
+
+  /* Add bottom spacing so mini doesn't overlap */
+  .library {
+    padding-bottom: 110px;
+  }
+
+  .mini-player {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 40px rgba(108, 99, 255, 0.25);
+    z-index: 999;
+  }
+
+  .mini-player img {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .mini-info {
+    flex: 1;
+  }
+
+  .mini-info h4 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .mini-info p {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  .mini-progress {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .mini-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #8f84ff, #6c63ff);
+    transition: width 0.1s linear;
+  }
+
+  .mini-player button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+}
+
+/* ================= BACKGROUND GLOW ================= */
+body::before {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(108, 99, 255, 0.4), transparent 70%);
+  top: 50%;
+  right: 15%;
+  transform: translateY(-50%);
+  filter: blur(120px);
+  z-index: -1;
+}
+
+.song-progress-click {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 12px;
+  /* slightly taller for easier click */
+  cursor: pointer;
+}
+
+/* ================= VOLUME (DESKTOP ONLY – PREMIUM STYLE) ================= */
+/* ================= VOLUME (DESKTOP PREMIUM DYNAMIC) ================= */
+
+.volume-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.volume-container:hover {
+  opacity: 1;
+}
+
+#volume {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 220px;
+  height: 4px;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+
+  /* 🔥 Dynamic fill using CSS variable */
+  background: linear-gradient(
+    to right,
+    #8f84ff var(--volume-percent, 100%),
+    rgba(255,255,255,0.12) var(--volume-percent, 100%)
+  );
+}
+
+/* Remove thumb completely */
+#volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+}
+
+#volume::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: none;
+}
+
+@media(max-width: 900px) {
+  .volume-container {
+    display: none;
+  }
+}
+
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -2;
+}
